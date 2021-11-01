@@ -15,7 +15,8 @@ import {
 import Notifications from "./Notifications";
 import DeleteItemModal from "./DeleteItemModal";
 import NewItemModal from "./NewItemModal";
-
+import { ToastContainer, toast } from 'react-toastify';
+import {toastError, toastInfo, toastSuccess} from "./utils";
 
 const apiUrl = 'https://hive.montanadev.com'
 
@@ -29,8 +30,9 @@ class Api {
             method: "DELETE",
             headers: this.headers,
         }).then(d => d.json()).then(result => {
-            this.notify(result)
+            toastSuccess("Successfully deleted item")
         }).catch(e => {
+            toastError(`Failed to delete item: ${e.toString()}`)
             this.notify(e, true)
         });
     }
@@ -39,13 +41,21 @@ class Api {
         return fetch(`${apiUrl}/api/items/`, {
             method: "POST",
             body: JSON.stringify({name: name, description: '', print: print})
-        })
+        }).then(d => d.json()).then(result => {
+            toastSuccess("Successfully created item")
+        }).catch(e => {
+            toastError(`Failed to create item: ${e.toString()}`)
+            this.notify(e, true)
+        });
     }
 
     loadItems = () => {
         return fetch(`${apiUrl}/api/items/`).then(d => d.json()).then(d => {
-            this.notify("Loaded items");
+            toastSuccess('Loaded items');
             return d;
+        }).catch(e => {
+            toastError(`Failed to load items: ${e.toString()}`)
+            this.notify(e, true)
         });
     }
 
@@ -72,11 +82,12 @@ function App() {
 
     return (
         <div>
+            <ToastContainer />
+
             <DeleteItemModal
                 open={pendingDeleteUPC !== null}
                 onDelete={() => api.delete(pendingDeleteUPC)}
                 onClose={() => setPendingDeleteUPC(null)}/>
-
 
             <NewItemModal
                 open={pendingCreate}
@@ -85,14 +96,15 @@ function App() {
                     api.new(name, print)
                 }/>
 
-            <h1>Hive</h1>
-            <Notifications notifications={notifications}/>
+            <div style={{display: 'flex'}}>
+                <h1>Hive</h1>
 
-            <Button onClick={() => setPendingCreate(true)}>
-                Add new item
-            </Button>
+                <div style={{width: '50px'}} />
+                <Button variant="contained" onClick={() => setPendingCreate(true)}>
+                    Add new item
+                </Button>
+            </div>
 
-            <Console/>
             <MaterialTable
                 columns={[
                     {title: 'UPC', field: 'upc'},
@@ -106,8 +118,15 @@ function App() {
                         icon: 'delete',
                         tooltip: 'Delete Item',
                         onClick: (event, rowData) => {
-                            console.log(rowData)
                             setPendingDeleteUPC(rowData.upc);
+                        }
+                    },
+                    {
+                        icon: 'print',
+                        tooltip: 'Print Item',
+                        onClick: (event, rowData) => {
+                            console.log(rowData)
+                            //setPendingDeleteUPC(rowData.upc);
                         }
                     }
                 ]}/>
