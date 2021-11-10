@@ -15,6 +15,8 @@ function ScannerModal({open, onClose}) {
         console.log(command);
         if (command && (command === 'hive mv' || command === 'hv mv')) {
             console.log("Moving to ", text);
+            // TODO - make api call
+            // TODO - make a sound? alert noise?
             setText('');
             setCommand(null);
         }
