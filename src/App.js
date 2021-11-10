@@ -1,39 +1,24 @@
 import './App.css';
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import MaterialTable from "material-table";
-import Console from "./Console";
-import {
-    Box, Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Modal,
-    Typography
-} from "@material-ui/core";
-import Notifications from "./Notifications";
+import {Button} from "@material-ui/core";
 import DeleteItemModal from "./DeleteItemModal";
 import NewItemModal from "./NewItemModal";
-import { ToastContainer, toast } from 'react-toastify';
-import {toastError, toastInfo, toastSuccess} from "./utils";
+import {ToastContainer} from 'react-toastify';
+import {toastError, toastSuccess} from "./utils";
+import PrintLabelModal from "./PrintLabelModal";
+import ScannerModal from "./ScannerModal";
 
 const apiUrl = 'https://hive.montanadev.com'
 
 class Api {
-    constructor(notify) {
-        this.notify = notify
-    }
-
     delete = (upc) => {
         return fetch(`${apiUrl}/api/items/${upc}`, {
             method: "DELETE",
-            headers: this.headers,
         }).then(d => d.json()).then(result => {
-            toastSuccess("Successfully deleted item")
+            toastSuccess("Successfully deleted item");
         }).catch(e => {
-            toastError(`Failed to delete item: ${e.toString()}`)
-            this.notify(e, true)
+            toastError(`Failed to delete item: ${e.toString()}`);
         });
     }
 
@@ -42,10 +27,9 @@ class Api {
             method: "POST",
             body: JSON.stringify({name: name, description: '', print: print})
         }).then(d => d.json()).then(result => {
-            toastSuccess("Successfully created item")
+            toastSuccess("Successfully created item");
         }).catch(e => {
-            toastError(`Failed to create item: ${e.toString()}`)
-            this.notify(e, true)
+            toastError(`Failed to create item: ${e.toString()}`);
         });
     }
 
@@ -54,27 +38,31 @@ class Api {
             toastSuccess('Loaded items');
             return d;
         }).catch(e => {
-            toastError(`Failed to load items: ${e.toString()}`)
-            this.notify(e, true)
+            toastError(`Failed to load items: ${e.toString()}`);
+        });
+    }
+
+    print = (upc, description) => {
+        return fetch(`${apiUrl}/api/print`, {
+            method: "POST",
+            body: JSON.stringify({upc: upc, description: description})
+        }).then(d => d.json()).then(result => {
+            toastSuccess("Successfully requested a printed label");
+        }).catch(e => {
+            toastError(`Failed to print label: ${e.toString()}`);
         });
     }
 
 }
 
 function App() {
-    const [notifications, setNotifications] = useState([]);
     const [items, setItems] = useState([]);
     const [pendingDeleteUPC, setPendingDeleteUPC] = useState(null);
     const [pendingCreate, setPendingCreate] = useState(false);
+    const [printLabelOpen, setPrintLabelOpen] = useState(false);
+    const [scannerOpen, setScannerOpen] = useState(false);
 
-    const notify = (message, error = false) => {
-        setNotifications(oldNotifications => [...oldNotifications, {
-            message: message,
-            error: error,
-        }]);
-    }
-
-    const api = new Api(notify);
+    const api = new Api();
 
     useEffect(() => {
         api.loadItems().then(items => setItems(items));
@@ -96,12 +84,27 @@ function App() {
                     api.new(name, print)
                 }/>
 
+            <PrintLabelModal
+                open={printLabelOpen}
+                onPrint={(upc, description) => api.print(upc, description)}
+                onClose={() => setPrintLabelOpen(false)} />
+
+            <ScannerModal
+                open={scannerOpen}
+                onClose={() => setScannerOpen(false)} />
+
             <div style={{display: 'flex'}}>
                 <h1>Hive</h1>
 
                 <div style={{width: '50px'}} />
                 <Button variant="contained" onClick={() => setPendingCreate(true)}>
-                    Add new item
+                    New item
+                </Button>
+                <Button variant="contained" onClick={() => setPrintLabelOpen(true)}>
+                    Print label
+                </Button>
+                <Button variant="contained" onClick={() => setScannerOpen(true)}>
+                    Scanner
                 </Button>
             </div>
 
