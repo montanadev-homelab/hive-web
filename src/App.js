@@ -5,55 +5,9 @@ import {Button} from "@material-ui/core";
 import DeleteItemModal from "./DeleteItemModal";
 import NewItemModal from "./NewItemModal";
 import {ToastContainer} from 'react-toastify';
-import {toastError, toastSuccess} from "./utils";
 import PrintLabelModal from "./PrintLabelModal";
 import ScannerModal from "./ScannerModal";
-
-const apiUrl = 'https://hive.montanadev.com'
-
-class Api {
-    delete = (upc) => {
-        return fetch(`${apiUrl}/api/items/${upc}`, {
-            method: "DELETE",
-        }).then(d => d.json()).then(result => {
-            toastSuccess("Successfully deleted item");
-        }).catch(e => {
-            toastError(`Failed to delete item: ${e.toString()}`);
-        });
-    }
-
-    new = (name, print = false) => {
-        return fetch(`${apiUrl}/api/items/`, {
-            method: "POST",
-            body: JSON.stringify({name: name, description: '', print: print})
-        }).then(d => d.json()).then(result => {
-            toastSuccess("Successfully created item");
-        }).catch(e => {
-            toastError(`Failed to create item: ${e.toString()}`);
-        });
-    }
-
-    loadItems = () => {
-        return fetch(`${apiUrl}/api/items/`).then(d => d.json()).then(d => {
-            toastSuccess('Loaded items');
-            return d;
-        }).catch(e => {
-            toastError(`Failed to load items: ${e.toString()}`);
-        });
-    }
-
-    print = (upc, description) => {
-        return fetch(`${apiUrl}/api/print`, {
-            method: "POST",
-            body: JSON.stringify({upc: upc, description: description})
-        }).then(d => d.json()).then(result => {
-            toastSuccess("Successfully requested a printed label");
-        }).catch(e => {
-            toastError(`Failed to print label: ${e.toString()}`);
-        });
-    }
-
-}
+import {Api} from "./Api";
 
 function App() {
     const [items, setItems] = useState([]);
