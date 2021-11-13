@@ -1,6 +1,6 @@
 import {toastError, toastSuccess} from "./utils";
 
-const apiUrl = 'https://hive.montanadev.com'
+const apiUrl = 'https://hive-api.montanadev.com'
 
 export class Api {
     delete = (upc) => {
