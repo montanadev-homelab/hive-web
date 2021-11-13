@@ -50,4 +50,8 @@ export class Api {
         });
     }
 
+    moveItem = (upc, location) => {
+        return Promise.resolve();
+    }
+
 }

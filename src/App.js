@@ -45,6 +45,7 @@ function App() {
 
             <ScannerModal
                 open={scannerOpen}
+                onMoveItem={api.moveItem}
                 onClose={() => setScannerOpen(false)} />
 
             <div style={{display: 'flex'}}>

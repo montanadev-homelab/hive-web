@@ -1,32 +1,50 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import {createRef, useState} from "react";
+import {say, toastError, toastSuccess} from "./utils";
 
 
-function ScannerModal({open, onClose}) {
+function ScannerModal({open, onClose, onError, onMoveItem}) {
     const [text, setText] = useState('');
+    const [upc, setUpc] = useState(null);
+    const [location, setLocation] = useState(null);
     const [command, setCommand] = useState(null);
     const submit = () => {
         if (!command) {
+            if (text !== 'hive mv' && text !== 'hv mv') {
+                say('error');
+                toastError('Command not recognized');
+                return;
+            }
+            say('u p c');
             setCommand(text);
-            setText('');
-            return;
-        }
-
-        console.log(command);
-        if (command && (command === 'hive mv' || command === 'hv mv')) {
-            console.log("Moving to ", text);
-            // TODO - make api call
-            // TODO - make a sound? alert noise?
-            setText('');
+        } else if (!upc) {
+            setUpc(text);
+            say('location');
+        } else if (!location) {
+            // No need to setLocation, its the last to be displayed
+            setUpc(null);
+            setLocation(null);
             setCommand(null);
+            onMoveItem(upc, text).then(() => {
+                say('success');
+                toastSuccess(`Moved ${upc} to ${text} successfully`);
+            });
         }
-
+        setText('');
     };
+
+    const internalOnClose = () => {
+        setText('');
+        setUpc(null);
+        setLocation(null);
+        setCommand(null)
+        onClose();
+    }
 
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={internalOnClose}
         >
             <DialogTitle>
                 Scanner
@@ -34,6 +52,9 @@ function ScannerModal({open, onClose}) {
             <DialogContent>
                 <DialogContentText>
                     <p>{command}</p>
+                    <p>{upc}</p>
+                    <p>{location}</p>
+
 
                     <input autoFocus type="text" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -45,7 +66,7 @@ function ScannerModal({open, onClose}) {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Close</Button>
+                <Button onClick={internalOnClose}>Close</Button>
             </DialogActions>
         </Dialog>
     );

@@ -34,3 +34,10 @@ export function toastError(msg) {
         progress: undefined,
     });
 }
+
+export function say(text) {
+    const msg = new SpeechSynthesisUtterance();
+    msg.text = text;
+    window.speechSynthesis.speak(msg);
+
+}
