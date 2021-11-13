@@ -1,0 +1,35 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Context for Buildx
+      id: buildx-context
+      run: |
+        docker context create builders
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        endpoint: builders
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: docker.montanadev.com/hive-web:${{ github.sha }},docker.montanadev.com/hive-web:latest
+
+    - uses: azure/setup-kubectl@v1
+      id: install
+
+    - uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRIVATE_CLUSTER }}
+      with:
+        args: set image deployment/hive-web hive-web=docker.montanadev.com/hive-web:${{ github.sha }}

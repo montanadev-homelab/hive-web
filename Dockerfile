@@ -6,7 +6,6 @@ COPY . .
 RUN npm i && \
     npm run build
 
-
 FROM nginx
 
 WORKDIR /usr/share/nginx/html
