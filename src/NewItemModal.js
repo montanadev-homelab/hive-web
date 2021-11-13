@@ -17,7 +17,7 @@ function NewItemModal({open, onClose, onCreate}) {
             <DialogContent>
                 <DialogContentText>
                     <label>Name</label>
-                    <input onChange={(e) => setName(e.target.value)} type='text'/>
+                    <input autoFocus onChange={(e) => setName(e.target.value)} type='text'/>
 
                     <br/>
 

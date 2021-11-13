@@ -8,6 +8,7 @@ import {ToastContainer} from 'react-toastify';
 import PrintLabelModal from "./PrintLabelModal";
 import ScannerModal from "./ScannerModal";
 import {Api} from "./Api";
+import {toastError, toastSuccess} from "./utils";
 
 function App() {
     const [items, setItems] = useState([]);
@@ -51,7 +52,6 @@ function App() {
             <div style={{display: 'flex'}}>
                 <h1>Hive</h1>
 
-                <div style={{width: '50px'}} />
                 <Button variant="contained" onClick={() => setPendingCreate(true)}>
                     New item
                 </Button>
@@ -83,8 +83,11 @@ function App() {
                         icon: 'print',
                         tooltip: 'Print Item',
                         onClick: (event, rowData) => {
-                            console.log(rowData)
-                            //setPendingDeleteUPC(rowData.upc);
+                            api.print(rowData.upc, rowData.name).then(() => {
+                                toastSuccess('Printed label successfully!');
+                            }).catch(e => {
+                                toastError(`Failed to print label: ${e.toString()}`);
+                            });
                         }
                     }
                 ]}/>

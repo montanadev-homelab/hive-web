@@ -24,7 +24,6 @@ function ScannerModal({open, onClose, onMoveItem}) {
             // No need to setLocation, its the last to be displayed
             setUpc(null);
             setLocation(null);
-            setCommand(null);
             onMoveItem(upc, text).then(() => {
                 say('success');
                 toastSuccess(`Moved ${upc} to ${text} successfully`);
@@ -54,9 +53,9 @@ function ScannerModal({open, onClose, onMoveItem}) {
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <p>{command}</p>
-                    <p>{upc}</p>
-                    <p>{location}</p>
+                    <p>Command: {command}</p>
+                    <p>UPC: {upc}</p>
+                    <p>Location: {location}</p>
 
 
                     <input autoFocus type="text" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => {
