@@ -3,7 +3,7 @@ import {createRef, useState} from "react";
 import {say, toastError, toastSuccess} from "./utils";
 
 
-function ScannerModal({open, onClose, onError, onMoveItem}) {
+function ScannerModal({open, onClose, onMoveItem}) {
     const [text, setText] = useState('');
     const [upc, setUpc] = useState(null);
     const [location, setLocation] = useState(null);
@@ -28,6 +28,9 @@ function ScannerModal({open, onClose, onError, onMoveItem}) {
             onMoveItem(upc, text).then(() => {
                 say('success');
                 toastSuccess(`Moved ${upc} to ${text} successfully`);
+            }).catch(e => {
+                say('failure');
+                toastError(`Failed to move ${upc} to ${text}: ${e.toString()}`);
             });
         }
         setText('');

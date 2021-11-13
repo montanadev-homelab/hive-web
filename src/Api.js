@@ -51,7 +51,17 @@ export class Api {
     }
 
     moveItem = (upc, location) => {
-        return Promise.resolve();
+        return fetch(`${apiUrl}/api/items/${upc}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({location: location})
+        }).then(d => d.json()).then(result => {
+            toastSuccess("Successfully moved item");
+        }).catch(e => {
+            toastError(`Failed to move item: ${e.toString()}`);
+        });
     }
 
 }
