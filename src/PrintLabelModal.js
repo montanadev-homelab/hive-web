@@ -13,7 +13,7 @@ function PrintLabelModal({open, onClose, onPrint}) {
             onClose={onClose}
         >
             <DialogTitle>
-                Create new item
+                Print new label
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
