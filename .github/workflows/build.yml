@@ -1,6 +1,6 @@
-name: Tests
+name: Build and push
 
-on: [push]
+on: [ push ]
 
 env:
   REGISTRY: ghcr.io
