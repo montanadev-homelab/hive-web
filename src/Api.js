@@ -1,15 +1,34 @@
 import {toastError, toastSuccess} from "./utils";
 
-const apiUrl = 'https://hive-api.montanadev.com'
+let apiUrl = 'https://hive-api.montanadev.com'
+if (window.location.href === "http://localhost:3000/") {
+    apiUrl = 'http://localhost:8000';
+}
 
 export class Api {
     deleteItem = (upc) => {
         return fetch(`${apiUrl}/api/items/${upc}`, {
             method: "DELETE",
         }).then(result => {
+            if (!result.ok) {
+                throw new Error();
+            }
             toastSuccess("Successfully deleted item");
         }).catch(e => {
             toastError(`Failed to delete item: ${e.toString()}`);
+        });
+    }
+
+    deleteImage = (upc) => {
+        return fetch(`${apiUrl}/api/items/${upc}/image`, {
+            method: "DELETE",
+        }).then(result => {
+            if (!result.ok) {
+                throw new Error();
+            }
+            toastSuccess("Successfully deleted image");
+        }).catch(e => {
+            toastError(`Failed to delete image: ${e.toString()}`);
         });
     }
 
@@ -20,10 +39,34 @@ export class Api {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({name: name, description: '', print: print, image: image})
-        }).then(d => d.json()).then(result => {
+        }).then(d => {
+            if (!d.ok) {
+                throw new Error();
+            }
+            return d.json()
+        }).then(result => {
             toastSuccess("Successfully created item");
         }).catch(e => {
             toastError(`Failed to create item: ${e.toString()}`);
+        });
+    }
+
+    newImage = (image, upc) => {
+        return fetch(`${apiUrl}/api/items/${upc}/image`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({image: image})
+        }).then(d => {
+            if (!d.ok) {
+                throw new Error();
+            }
+            return d.json()
+        }).then(result => {
+            toastSuccess("Successfully created image");
+        }).catch(e => {
+            toastError(`Failed to create image: ${e.toString()}`);
         });
     }
 
@@ -34,7 +77,12 @@ export class Api {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({name: name})
-        }).then(d => d.json()).then(result => {
+        }).then(d => {
+            if (!d.ok) {
+                throw new Error();
+            }
+            return d.json()
+        }).then(result => {
             toastSuccess("Successfully created location");
         }).catch(e => {
             toastError(`Failed to create location: ${e.toString()}`);
@@ -42,7 +90,12 @@ export class Api {
     }
 
     loadItems = () => {
-        return fetch(`${apiUrl}/api/items/`).then(d => d.json()).then(d => {
+        return fetch(`${apiUrl}/api/items/`).then(d => {
+            if (!d.ok) {
+                throw new Error();
+            }
+            return d.json()
+        }).then(d => {
             toastSuccess('Loaded items');
             return d;
         }).catch(e => {
@@ -51,7 +104,12 @@ export class Api {
     }
 
     loadLocations = () => {
-        return fetch(`${apiUrl}/api/locations/`).then(d => d.json()).then(d => {
+        return fetch(`${apiUrl}/api/locations/`).then(d => {
+            if (!d.ok) {
+                throw new Error();
+            }
+            return d.json()
+        }).then(d => {
             toastSuccess('Loaded locations');
             return d;
         }).catch(e => {
@@ -66,7 +124,12 @@ export class Api {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({upc: upc, description: description})
-        }).then(d => d.json()).then(result => {
+        }).then(d => {
+            if (!d.ok) {
+                throw new Error();
+            }
+            return d.json()
+        }).then(result => {
             toastSuccess("Successfully requested a printed label");
         }).catch(e => {
             toastError(`Failed to print label: ${e.toString()}`);
@@ -80,7 +143,12 @@ export class Api {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({location: location})
-        }).then(d => d.json()).then(result => {
+        }).then(d => {
+            if (!d.ok) {
+                throw new Error();
+            }
+            return d.json()
+        }).then(result => {
             toastSuccess("Successfully moved item");
         }).catch(e => {
             toastError(`Failed to move item: ${e.toString()}`);

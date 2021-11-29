@@ -10,9 +10,12 @@ import ScannerModal from "./ScannerModal";
 import {Api} from "./Api";
 import {toastError, toastSuccess} from "./utils";
 import NewLocationModal from "./NewLocationModal";
+import EditImageModal from "./EditImageModal";
 
 function App() {
     const [items, setItems] = useState([]);
+    const [editImage, setEditImage] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
     const [locations, setLocations] = useState([]);
     const [pendingDeleteUPC, setPendingDeleteUPC] = useState(null);
     const [pendingCreate, setPendingCreate] = useState(false);
@@ -61,6 +64,20 @@ function App() {
                 onMoveItem={api.moveItem}
                 onClose={() => setScannerOpen(false)}/>
 
+            <EditImageModal
+                open={editImage !== null}
+                image={editImage}
+                onDelete={() => {
+                    api.deleteImage(selectedItem);
+                }}
+                onCreate={(image) => {
+                    api.newImage(image, selectedItem)
+                }}
+                onClose={() => {
+                    setEditImage(null);
+                    setSelectedItem(null);
+                }} />
+
             <div style={{display: 'flex'}}>
                 <h1>Hive</h1>
 
@@ -94,6 +111,8 @@ function App() {
                             },
                             tooltip: 'Image',
                             onClick: (event, rowData) => {
+                                setEditImage(rowData.image);
+                                setSelectedItem(rowData.upc);
                             }
                         }
                     },
