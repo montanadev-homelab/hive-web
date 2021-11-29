@@ -1,10 +1,17 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
-import {useState} from "react";
+import {useCallback, useRef, useState} from "react";
+import Webcam from "react-webcam";
 
 
 function NewItemModal({open, onClose, onCreate}) {
     const [name, setName] = useState();
     const [print, setPrint] = useState(true);
+    const [image, setImage] = useState();
+
+    const webcamRef = useRef(null);
+    const capture = () => {
+        setImage(webcamRef.current.getScreenshot());
+    };
 
     return (
         <Dialog
@@ -23,13 +30,25 @@ function NewItemModal({open, onClose, onCreate}) {
 
                     <label>Print a new label</label>
                     <input type='checkbox' checked={print} onChange={() => setPrint(!print)}/>
+
+                    <br/>
+
+                    {image ? <p>Added an image!</p> :
+                        <div>
+                            <p>Add an image</p>
+                            <Webcam
+                                ref={webcamRef}
+                                screenshotFormat="image/png"
+                            />
+                            <button onClick={capture}>Add</button>
+                        </div>}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>
                 <Button onClick={() => {
                     onClose();
-                    onCreate(name, print);
+                    onCreate(name, print, image);
                 }} autoFocus>Create</Button>
             </DialogActions>
         </Dialog>
