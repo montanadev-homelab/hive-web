@@ -34,7 +34,10 @@ function EditImageModal({open, image, onDelete, onCreate, onClose}) {
                             }}>Retake?</button>
                         </div> :
                         <div>
-
+                            <Webcam
+                                ref={webcamRef}
+                                screenshotFormat="image/png"
+                            />
                             <button onClick={capture}>Add</button>
                         </div>}
                 </DialogContentText>
