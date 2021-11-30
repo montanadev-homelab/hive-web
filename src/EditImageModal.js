@@ -17,6 +17,7 @@ function EditImageModal({open, image, onDelete, onCreate, onClose}) {
 
     return (
         <Dialog
+            maxWidth={false}
             open={open}
             onClose={onClose}
         >

@@ -15,6 +15,7 @@ function NewItemModal({open, onClose, onCreate}) {
 
     return (
         <Dialog
+            maxWidth={false}
             open={open}
             onClose={onClose}
         >
