@@ -6,19 +6,15 @@ import Webcam from "react-webcam";
 function NewItemModal({open, onClose, onCreate}) {
     const [name, setName] = useState();
     const [print, setPrint] = useState(true);
-    const [image, setImage] = useState();
+    const [includeImage, setIncludeImage] = useState(true);
 
     const webcamRef = useRef(null);
-    const capture = () => {
-        setImage(webcamRef.current.getScreenshot());
-    };
 
     return (
         <Dialog
             maxWidth={false}
             open={open}
             onClose={() => {
-                setImage(null);
                 setPrint(true);
                 setName(null);
                 onClose();
@@ -37,24 +33,25 @@ function NewItemModal({open, onClose, onCreate}) {
                     <label>Print a new label</label>
                     <input type='checkbox' checked={print} onChange={() => setPrint(!print)}/>
 
-                    <br/>
+                    <label>Capture an image</label>
+                    <input type='checkbox' checked={includeImage} onChange={() => setIncludeImage(!includeImage)}/>
 
-                    {image ? <p>Added an image!</p> :
-                        <div>
-                            <p>Add an image</p>
-                            <Webcam
-                                ref={webcamRef}
-                                screenshotFormat="image/png"
-                            />
-                            <button onClick={capture}>Add</button>
-                        </div>}
+                    <br/>
+                    {includeImage && <Webcam
+                        ref={webcamRef}
+                        screenshotFormat="image/png"
+                    />}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>
                 <Button onClick={() => {
-                    onClose();
+                    let image;
+                    if (includeImage) {
+                        image = webcamRef.current.getScreenshot()
+                    }
                     onCreate(name, print, image);
+                    onClose();
                 }} autoFocus>Create</Button>
             </DialogActions>
         </Dialog>
