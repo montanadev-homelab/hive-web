@@ -17,7 +17,12 @@ function NewItemModal({open, onClose, onCreate}) {
         <Dialog
             maxWidth={false}
             open={open}
-            onClose={onClose}
+            onClose={() => {
+                setImage(null);
+                setPrint(true);
+                setName(null);
+                onClose();
+            }}
         >
             <DialogTitle>
                 Create new item
