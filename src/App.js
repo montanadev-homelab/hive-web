@@ -65,7 +65,7 @@ function App() {
                 onClose={() => setScannerOpen(false)}/>
 
             <EditImageModal
-                open={editImage !== null}
+                open={selectedItem !== null}
                 image={editImage}
                 onDelete={() => {
                     api.deleteImage(selectedItem);
