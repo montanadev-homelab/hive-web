@@ -11,6 +11,7 @@ import {Api} from "./Api";
 import {toastError, toastSuccess} from "./utils";
 import NewLocationModal from "./NewLocationModal";
 import EditImageModal from "./EditImageModal";
+import EnvironmentSwitcher from "./EnvironmentSwitcher";
 
 function App() {
     const [items, setItems] = useState([]);
@@ -22,13 +23,14 @@ function App() {
     const [newLocationOpen, setNewLocationOpen] = useState(false);
     const [printLabelOpen, setPrintLabelOpen] = useState(false);
     const [scannerOpen, setScannerOpen] = useState(false);
+    const [env, setEnv] = useState('local');
 
-    const api = new Api();
+    const api = new Api(env);
 
     useEffect(() => {
         api.loadItems().then(items => setItems(items));
         api.loadLocations().then(locations => setLocations(locations))
-    }, [])
+    }, [env]);
 
     return (
         <div>
@@ -77,6 +79,8 @@ function App() {
                     setEditImage(null);
                     setSelectedItem(null);
                 }} />
+
+            <EnvironmentSwitcher onSwitchEnvironment={setEnv}/>
 
             <div style={{display: 'flex'}}>
                 <h1>Hive</h1>

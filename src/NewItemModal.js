@@ -1,5 +1,5 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
-import {useCallback, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import Webcam from "react-webcam";
 
 

@@ -1,13 +1,16 @@
 import {toastError, toastSuccess} from "./utils";
 
-let apiUrl = 'https://hive-api.montanadev.com'
-if (window.location.href === "http://localhost:3000/") {
-    apiUrl = 'http://localhost:8000';
-}
 
 export class Api {
+    constructor(env) {
+        this.apiUrl = 'https://hive-api.montanadev.com'
+        if (env === 'local') {
+            this.apiUrl = 'http://localhost:8000';
+        }
+    }
+
     deleteItem = (upc) => {
-        return fetch(`${apiUrl}/api/items/${upc}`, {
+        return fetch(`${this.apiUrl}/api/items/${upc}`, {
             method: "DELETE",
         }).then(result => {
             if (!result.ok) {
@@ -20,7 +23,7 @@ export class Api {
     }
 
     deleteImage = (upc) => {
-        return fetch(`${apiUrl}/api/items/${upc}/image`, {
+        return fetch(`${this.apiUrl}/api/items/${upc}/image`, {
             method: "DELETE",
         }).then(result => {
             if (!result.ok) {
@@ -33,7 +36,7 @@ export class Api {
     }
 
     newItem = (name, print = false, image = null) => {
-        return fetch(`${apiUrl}/api/items/`, {
+        return fetch(`${this.apiUrl}/api/items/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -52,7 +55,7 @@ export class Api {
     }
 
     newImage = (image, upc) => {
-        return fetch(`${apiUrl}/api/items/${upc}/image`, {
+        return fetch(`${this.apiUrl}/api/items/${upc}/image`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -71,7 +74,7 @@ export class Api {
     }
 
     newLocation = (name) => {
-        return fetch(`${apiUrl}/api/locations/`, {
+        return fetch(`${this.apiUrl}/api/locations/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -90,7 +93,7 @@ export class Api {
     }
 
     loadItems = () => {
-        return fetch(`${apiUrl}/api/items/`).then(d => {
+        return fetch(`${this.apiUrl}/api/items/`).then(d => {
             if (!d.ok) {
                 throw new Error();
             }
@@ -104,7 +107,7 @@ export class Api {
     }
 
     loadLocations = () => {
-        return fetch(`${apiUrl}/api/locations/`).then(d => {
+        return fetch(`${this.apiUrl}/api/locations/`).then(d => {
             if (!d.ok) {
                 throw new Error();
             }
@@ -118,7 +121,7 @@ export class Api {
     }
 
     print = (upc, description) => {
-        return fetch(`${apiUrl}/api/print`, {
+        return fetch(`${this.apiUrl}/api/print`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -137,7 +140,7 @@ export class Api {
     }
 
     moveItem = (upc, location) => {
-        return fetch(`${apiUrl}/api/items/${upc}`, {
+        return fetch(`${this.apiUrl}/api/items/${upc}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
