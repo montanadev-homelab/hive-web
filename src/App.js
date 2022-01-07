@@ -23,7 +23,7 @@ function App() {
     const [newLocationOpen, setNewLocationOpen] = useState(false);
     const [printLabelOpen, setPrintLabelOpen] = useState(false);
     const [scannerOpen, setScannerOpen] = useState(false);
-    const [env, setEnv] = useState('local');
+    const [env, setEnv] = useState('remote');
 
     const api = new Api(env);
 
@@ -78,12 +78,10 @@ function App() {
                 onClose={() => {
                     setEditImage(null);
                     setSelectedItem(null);
-                }} />
-
-            <EnvironmentSwitcher onSwitchEnvironment={setEnv}/>
+                }}/>
 
             <div style={{display: 'flex'}}>
-                <h1>Hive</h1>
+                <h1 style={{paddingRight: 10, paddingLeft: 10}}>Hive</h1>
 
                 <Button variant="contained" onClick={() => setPendingCreate(true)}>
                     New item
@@ -97,6 +95,8 @@ function App() {
                 <Button variant="contained" onClick={() => setScannerOpen(true)}>
                     Scanner
                 </Button>
+
+                <EnvironmentSwitcher onSwitchEnvironment={setEnv} env={env}/>
             </div>
 
             <MaterialTable
