@@ -103,15 +103,16 @@ function App() {
                 columns={[
                     {title: 'UPC', field: 'upc'},
                     {title: 'Name', field: 'name'},
+                    {title: 'Touched', field: 'touched'},
                     {title: 'Location', field: 'location.name'},
                 ]}
                 data={items}
-                options={{pageSize: 100, pageSizeOptions: [100, 200, 1000], showTitle: false}}
+                options={{pageSize: 100, pageSizeOptions: [100, 200, 1000], showTitle: false, actionsColumnIndex: 4}}
                 actions={[
                     (rowData) => {
                         return {
                             icon: () => {
-                                return <img src={rowData.image} style={{width: "100px"}}/>
+                                return <img src={rowData.image} style={{width: "50px"}}/>
                             },
                             tooltip: 'Image',
                             onClick: (event, rowData) => {
