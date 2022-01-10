@@ -112,7 +112,8 @@ function App() {
                     (rowData) => {
                         return {
                             icon: () => {
-                                return <img src={rowData.image} style={{width: "50px"}}/>
+                                console.log(rowData);
+                                return <img src={`${api.apiUrl}/api/items/${rowData.upc}/image`} style={{width: "50px"}}/>
                             },
                             tooltip: 'Image',
                             onClick: (event, rowData) => {
