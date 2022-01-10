@@ -14,10 +14,10 @@ export function toastInfo(msg) {
 export function toastSuccess(msg) {
     toast.success(msg, {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 750,
         hideProgressBar: true,
         closeOnClick: true,
-        pauseOnHover: true,
+        pauseOnHover: false,
         draggable: true,
         progress: undefined,
     });
