@@ -36,12 +36,17 @@ export class Api {
     }
 
     newItem = (name, print = false, image = null) => {
+        let body = {name: name, print: print}
+        if (image) {
+            body.image = image;
+        }
+
         return fetch(`${this.apiUrl}/api/items/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name: name, description: '', print: print, image: image})
+            body: JSON.stringify(body)
         }).then(d => {
             if (!d.ok) {
                 throw new Error();

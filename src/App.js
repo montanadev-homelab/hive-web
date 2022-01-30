@@ -111,10 +111,8 @@ function App() {
                 actions={[
                     (rowData) => {
                         return {
-                            icon: () => {
-                                console.log(rowData);
-                                return <img src={`${api.apiUrl}/api/items/${rowData.upc}/image`} style={{width: "50px"}}/>
-                            },
+                            icon: () =>
+                                <img src={`${api.apiUrl}/api/items/${rowData.upc}/image`} style={{width: "50px"}}/>,
                             tooltip: 'Image',
                             onClick: (event, rowData) => {
                                 setEditImage(rowData.image);
